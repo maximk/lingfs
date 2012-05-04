@@ -1,0 +1,9 @@
+
+Lingfs is a 9P server that adds filesystem and TCP/IP capabilities to Ling, the
+Erlang virtual machine that runs directly on Xen.
+
+Lingfs is based on npfs/spfs 9P library created by Latchesar Ionkov. The major
+modification is the addition of a new transport Ethernet frames. The new
+transport allows a lightweight communication between Xen guests and the file
+server in Dom0.
+
