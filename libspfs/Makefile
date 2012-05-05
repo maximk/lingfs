@@ -16,6 +16,8 @@ LIBFILES=\
 	socksrv.o\
 	srv.o\
 	user.o\
+	ethsrv.o\
+	ethconn.o
 
 libspfs.a: $(LIBFILES)
 	ar rc libspfs.a $(LIBFILES)

@@ -156,7 +156,7 @@ sp_attach(Spreq *req, Spfcall *tc)
 			goto done;
 		}
 
-		if (!afid->type&Qtauth) {
+		if (!(afid->type&Qtauth)) {
 			sp_werror(Ebadusefid, EINVAL);
 			goto done;
 		}
@@ -254,7 +254,7 @@ sp_walk(Spreq *req, Spfcall *tc)
 		sp_fid_incref(fid);
 
 	req->fid = fid;
-	if (!fid->type&Qtdir) {
+	if (!(fid->type&Qtdir)) {
 		sp_werror(Enotdir, ENOTDIR);
 		goto done;
 	}
@@ -295,7 +295,7 @@ sp_walk(Spreq *req, Spfcall *tc)
 		newfid->type = wqids[i].type;
 		i++;
 
-		if (i<(tc->nwname) && !newfid->type&Qtdir)
+		if (i<(tc->nwname) && !(newfid->type&Qtdir))
 			break;
 	}
 
@@ -368,7 +368,7 @@ sp_create(Spreq *req, Spfcall *tc)
 		goto done;
 	}
 
-	if (!fid->type&Qtdir) {
+	if (!(fid->type&Qtdir)) {
 		sp_werror(Enotdir, ENOTDIR);
 		goto done;
 	}
@@ -628,8 +628,8 @@ sp_wstat(Spreq *req, Spfcall *tc)
                 goto done;
         }
 
-	if ((fid->type&Qtdir && !stat->mode&Dmdir)
-	|| (!fid->type&Qtdir&&stat->mode&Dmdir)) {
+	if (((fid->type&Qtdir) && !(stat->mode&Dmdir))
+	|| (!(fid->type&Qtdir) && (stat->mode&Dmdir))) {
 		sp_werror(Edirchange, EPERM);
 		goto done;
 	}

@@ -24,6 +24,8 @@
 #include <sys/types.h>
 #include <stdint.h>
 
+#include <stdio.h>
+
 typedef uint8_t   u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -455,6 +457,7 @@ void sp_conn_respond(Spconn *conn, Spreq *req);
 Spfcall *sp_conn_new_incall(Spconn *conn);
 void sp_conn_free_incall(Spconn* conn, Spfcall *rc);
 Spconn *sp_fdconn_create(Spsrv *srv, int fdin, int fdout);
+Spconn *sp_ethconn_create(Spsrv *srv, int fd);
 
 Spfid **sp_fidpool_create(void);
 void sp_fidpool_destroy(Spfid **);
@@ -512,6 +515,7 @@ int sp_usergroups(Spuser *u, gid_t **gids);
 int sp_change_user(Spuser *u);
 
 Spsrv *sp_socksrv_create_tcp(int*);
+Spsrv *sp_ethsrv_create();
 Spsrv *sp_pipesrv_create();
 int sp_pipesrv_mount(Spsrv *srv, char *mntpt, char *user, int mntflags, char *opts);
 
