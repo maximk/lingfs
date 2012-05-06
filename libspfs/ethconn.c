@@ -32,6 +32,10 @@
 #include <sys/socket.h>
 #include <netpacket/packet.h>
 
+#include <arpa/inet.h>
+
+#include <poll.h>
+
 typedef struct Spethconn Spethconn;
 struct Spethconn {
 	struct sockaddr_ll saddr;
@@ -89,13 +93,12 @@ sp_ethconn_shutdown(Spconn *conn)
 static void
 sp_ethconn_dataout(Spconn *conn, Spreq *req)
 {
-	Spethconn *ethconn = conn->caux;
+	//Spethconn *ethconn = conn->caux;
 
 	if (req != conn->oreqs)
 		return;
 
-	if (spfd_can_write(ethconn->spfd))
-		sp_ethconn_write(conn);
+	sp_ethconn_write(conn);
 }
 
 static void
@@ -104,20 +107,24 @@ sp_ethconn_notify(Spfd *spfd, void *aux)
 	int n = 0;
 	Spconn *conn = aux;
 
+	int cr = spfd_can_read(spfd);
+	if (conn->srv->debuglevel > 0)
+		fprintf(stderr, "sp_ethconn_notify: fd readable %d\n", cr);
+
 	if (spfd_can_read(spfd))
 		n = sp_ethconn_read(conn);
 
-	if (!n && spfd_can_write(spfd))
-		sp_ethconn_write(conn);
-
 	if (n || spfd_has_error(spfd))
+	{
+		if (conn->srv->debuglevel > 0)
+			fprintf(stderr, "sp_ethconn_notify: error, shutdown conn\n");
 		sp_conn_shutdown(conn);
+	}
 }
 
 static int
 sp_ethconn_read(Spconn *conn)
 {
-	int n, size;
 	Spsrv *srv = conn->srv;
 	Spfcall *fc;
 	Spreq *req;
@@ -147,29 +154,33 @@ sp_ethconn_read(Spconn *conn)
 
 	socklen_t sa_len = sizeof(ethconn->saddr);
 	spfd_read(ethconn->spfd, 0, 0);
-	n = recvfrom(ethconn->fd, fc->pkt +fc->size, conn->msize -fc->size, 0,
+	int n = recvfrom(ethconn->fd, fc->pkt, conn->msize, 0,
 			(struct sockaddr *)&ethconn->saddr, &sa_len);
+	if (srv->debuglevel > 1)
+		fprintf(stderr, "sp_ethconn_read: recvfrom returns %d\n", n);
 	if (n == 0)
-		return -1;
+		return 0;	// 0 would signify eof of a tcp socket
 	else if (n < 0)
+	{
+		if (srv->debuglevel > 0)
+			fprintf(stderr, "sp_ethconn_read: recvfrom error: %s\n", strerror(errno));
+		return 0;
+	}
+
+	// packets of other protocols may still be visible on the interface
+	if (ethconn->saddr.sll_protocol != htons(EXP_9P_ETH))
 		return 0;
 
-	fc->size += n;
-
-again:
-	n = fc->size;
 	if (n < 4)
 		return 0;
 
-	size = fc->pkt[0] | (fc->pkt[1]<<8) | (fc->pkt[2]<<16) | (fc->pkt[3]<<24);
-	if (n < size)
+	int exp_size = fc->pkt[0] | (fc->pkt[1]<<8) | (fc->pkt[2]<<16) | (fc->pkt[3]<<24);
+	if (srv->debuglevel > 1)
+		fprintf(stderr, "sp_ethconn_read: expected size %d\n", exp_size);
+	if (exp_size != n -4) 	// +4: csum field
 		return 0;
 
-	if (size > conn->msize) {
-		fprintf(stderr, "error: packet too big\n");
-		close(ethconn->fd);
-		return 0;
-	}
+	fc->size = exp_size;
 
 	if (!sp_deserialize(fc, fc->pkt, conn->dotu)) {
 		fprintf(stderr, "error while deserializing\n");
@@ -177,7 +188,7 @@ again:
 		return 0;
 	}
 
-	if (srv->debuglevel) {
+	if (srv->debuglevel > 0) {
 		fprintf(stderr, "<<< (%p) ", conn);
 		sp_printfcall(stderr, fc, conn->dotu);
 		fprintf(stderr, "\n");
@@ -186,25 +197,7 @@ again:
 	req = conn->ireqs;
 	req->tag = req->tcall->tag;
 	conn->ireqs = NULL;
-	if (n > size) {
-		fc = sp_conn_new_incall(conn);
-		if (!fc)
-			return 0;
-
-		fc->size = 0;
-		conn->ireqs = sp_req_alloc(conn, fc);
-		if (!req)
-			return 0;
-
-		memmove(fc->pkt, req->tcall->pkt + size, n - size);
-		fc->size = n - size;
-	}
-
 	sp_srv_process_req(req);
-	if (conn->ireqs) {
-		fc = conn->ireqs->tcall;
-		goto again;
-	}
 
 	return 0;
 }
@@ -213,44 +206,42 @@ static void
 sp_ethconn_write(Spconn *conn)
 {
 	int n;
-	u32 pos;
 	Spfcall *rc;
 	Spreq *req;
 	Spsrv *srv = conn->srv;
 	Spethconn *ethconn = conn->caux;
+
+	if (srv->debuglevel > 0)
+		fprintf(stderr, "sp_ethconn_write: entered\n");
 
 	if (!conn->oreqs)
 		return;
 
 	req = conn->oreqs;
 	rc = req->rcall;
-	pos = (int) req->caux;
-	if (conn->srv->debuglevel && pos==0) {
+	if (conn->srv->debuglevel) {
 		fprintf(stderr, ">>> (%p) ", conn);
 		sp_printfcall(stderr, rc, conn->dotu);
 		fprintf(stderr, "\n");
 	}
 
-	spfd_write(ethconn->spfd, 0, 0);
-	n = sendto(ethconn->fd, rc->pkt +pos, rc->size -pos, 0,
+	n = sendto(ethconn->fd, rc->pkt, rc->size, 0,
 			(struct sockaddr *)&ethconn->saddr, sizeof(ethconn->saddr));
+	if (srv->debuglevel > 0)
+		fprintf(stderr, "sp_ethconn_write: sendto returned %d\n", n);
 	if (n <= 0)
 		return;
 
-	pos += n;
-	req->caux = (void *) pos;
-	if (pos == rc->size) {
-		conn->oreqs = req->next;
-		sp_conn_free_incall(conn, req->tcall);
-		sp_req_free(req);
-		if (rc==srv->rcenomem || rc==srv->rcenomemu) {
-			/* unblock reading and read some messages if we can */
-			srv->enomem = 0;
-			if (spfd_can_read(ethconn->spfd))
-				sp_ethconn_read(conn);
-		} else
-			free(rc);
-	}
+	conn->oreqs = req->next;
+	sp_conn_free_incall(conn, req->tcall);
+	sp_req_free(req);
+	if (rc==srv->rcenomem || rc==srv->rcenomemu) {
+		/* unblock reading and read some messages if we can */
+		srv->enomem = 0;
+		if (spfd_can_read(ethconn->spfd))
+			sp_ethconn_read(conn);
+	} else
+		free(rc);
 }
 
 //EOF

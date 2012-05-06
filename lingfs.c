@@ -20,6 +20,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 //#define _XOPEN_SOURCE 500
 #define _BSD_SOURCE
 #include <stdlib.h>
@@ -54,7 +55,7 @@ struct Fid {
 };
 
 Spsrv *srv;
-int debuglevel;
+int debuglevel = 0;
 int sameuser;
 int mmapreads;
 
@@ -109,7 +110,7 @@ main(int argc, char **argv)
 	while ((c = getopt(argc, argv, "dsmxp:w:")) != -1) {
 		switch (c) {
 		case 'd':
-			debuglevel = 1;
+			debuglevel++;
 			break;
 
 		case 'x':

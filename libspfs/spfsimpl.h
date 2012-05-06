@@ -21,6 +21,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/* ethsrv.c and ethconn.c */
+
+#define EXP_9P_ETH		0x885b
+
 /* fcall.c */
 Spfcall *sp_version(Spreq *req, Spfcall *tc);
 Spfcall *sp_auth(Spreq *req, Spfcall *tc);

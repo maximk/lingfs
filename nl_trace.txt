@@ -1,0 +1,144 @@
+NLMSG: RTM_NEW_LINK idindex 33 change -1
+	flags:  IFF_BROADCAST           IFF_MULTICAST   
+	attr: IFLA_IFNAME [vif30.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [noop]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 436
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags:  IFF_BROADCAST           IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [noop]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 88
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags:  IFF_BROADCAST           IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_MASTER (3)
+	attr: IFLA_MTU (1500)
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_PROTINFO (0)
+NLMSG(s): done
+NLMSG(s): len 440
+NLMSG: RTM_NEW_LINK idindex 33 change 1
+	flags: IFF_UP IFF_BROADCAST     IFF_RUNNING  IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (0)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [pfifo_fast]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 88
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags: IFF_UP IFF_BROADCAST     IFF_RUNNING  IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_MASTER (3)
+	attr: IFLA_MTU (1500)
+	attr: IFLA_OPERSTATE (0)
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_PROTINFO (3)
+NLMSG(s): done
+NLMSG(s): len 440
+NLMSG: RTM_NEW_LINK idindex 33 change 1
+	flags:  IFF_BROADCAST       IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [pfifo_fast]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 88
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags:  IFF_BROADCAST       IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_MASTER (3)
+	attr: IFLA_MTU (1500)
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_PROTINFO (0)
+NLMSG(s): done
+NLMSG(s): len 440
+NLMSG: RTM_NEW_LINK idindex 33 change 1
+	flags: IFF_UP IFF_BROADCAST     IFF_RUNNING  IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (0)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [pfifo_fast]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 88
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags: IFF_UP IFF_BROADCAST     IFF_RUNNING  IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_MASTER (3)
+	attr: IFLA_MTU (1500)
+	attr: IFLA_OPERSTATE (0)
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_PROTINFO (3)
+NLMSG(s): done
+NLMSG(s): len 440
+NLMSG: RTM_NEW_LINK idindex 33 change 65
+	flags:  IFF_BROADCAST       IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_TXQLEN [4]
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_LINKMODE [1]
+	attr: IFLA_MTU (1500)
+	attr: IFLA_QDISC [pfifo_fast]
+	attr: IFLA_MAP [28]
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_BROADCAST ff:ff:ff:ff:ff:ff
+	attr: IFLA_STATS [92]
+	attr: IFLA_STATS64 [184]
+	attr: IFLA_NUM_VF [4]
+NLMSG(s): done
+NLMSG(s): len 88
+NLMSG: RTM_NEW_LINK idindex 33 change 0
+	flags:  IFF_BROADCAST       IFF_PROMISC    IFF_MULTICAST   
+	attr: IFLA_IFNAME [xen1.0]
+	attr: IFLA_MASTER (3)
+	attr: IFLA_MTU (1500)
+	attr: IFLA_OPERSTATE (2)
+	attr: IFLA_ADDRESS fe:ff:ff:ff:ff:ff
+	attr: IFLA_PROTINFO (0)
