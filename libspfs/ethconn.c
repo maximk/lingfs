@@ -107,9 +107,13 @@ sp_ethconn_notify(Spfd *spfd, void *aux)
 	int n = 0;
 	Spconn *conn = aux;
 
-	int cr = spfd_can_read(spfd);
-	if (conn->srv->debuglevel > 0)
-		fprintf(stderr, "sp_ethconn_notify: fd readable %d\n", cr);
+//	int cr = spfd_can_read(spfd);
+//	int cw = spfd_can_write(spfd);
+//	if (conn->srv->debuglevel > 0)
+//		fprintf(stderr, "sp_ethconn_notify: fd readable %d writable %d\n", cr, cw);
+
+//	if (spfd_can_write(spfd))
+//		spfd_write(spfd, 0, 0);	// reset polling flags
 
 	if (spfd_can_read(spfd))
 		n = sp_ethconn_read(conn);
@@ -129,6 +133,8 @@ sp_ethconn_read(Spconn *conn)
 	Spfcall *fc;
 	Spreq *req;
 	Spethconn *ethconn = conn->caux;
+
+	printf("reading...\n");
 
 	/* if we are sending Enomem error back, block all reading */
 	if (srv->enomem)
@@ -159,7 +165,7 @@ sp_ethconn_read(Spconn *conn)
 	if (srv->debuglevel > 1)
 		fprintf(stderr, "sp_ethconn_read: recvfrom returns %d\n", n);
 	if (n == 0)
-		return 0;	// 0 would signify eof of a tcp socket
+		return -1;
 	else if (n < 0)
 	{
 		if (srv->debuglevel > 0)
@@ -168,8 +174,7 @@ sp_ethconn_read(Spconn *conn)
 	}
 
 	// packets of other protocols may still be visible on the interface
-	if (ethconn->saddr.sll_protocol != htons(EXP_9P_ETH))
-		return 0;
+	assert(ethconn->saddr.sll_protocol == htons(EXP_9P_ETH));
 
 	if (n < 4)
 		return 0;

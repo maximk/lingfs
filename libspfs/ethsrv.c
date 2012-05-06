@@ -175,10 +175,9 @@ sp_ethsrv_notify(Spfd *spfd, void *aux)
 					goto fail2;
 
 				if (srv->debuglevel > 0)
-					fprintf(stderr, "sp_ethsrv_notify: ethconn added [%d]\n", ifi->ifi_index);
+					fprintf(stderr, "sp_ethsrv_notify: ethconn added: fd %d idx %d\n", fd, ifi->ifi_index);
 			}
 		}
-
 		hdr = NLMSG_NEXT(hdr, len);
 	}
 

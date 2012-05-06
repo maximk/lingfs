@@ -101,14 +101,14 @@ spfd_add(int fd, void (*notify)(Spfd *, void *), void *aux)
 {
 	Spfd *spfd;
 
-//	fprintf(stderr, "spfd_add fd %d\n", fd);
+	fprintf(stderr, "spfd_add fd %d\n", fd);
 	spfd = sp_malloc(sizeof(*spfd));
 	if (!spfd)
 		return NULL;
 
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	spfd->fd = fd;
-	spfd->flags = 0;
+	spfd->flags = POLLIN;
 	spfd->aux = aux;
 	spfd->notify = notify;
 	spfd->pfd = NULL;
@@ -125,7 +125,7 @@ spfd_add(int fd, void (*notify)(Spfd *, void *), void *aux)
 void
 spfd_remove(Spfd *spfd)
 {
-//	fprintf(stderr, "spfd_remove fd %d\n", spfd->fd);
+	fprintf(stderr, "spfd_remove fd %d\n", spfd->fd);
 	spfd->flags |= Removed;
 	ptbl.flags |= TblModified;
 }
@@ -312,7 +312,7 @@ sp_poll_once()
 		sp_poll_update_table();
 
 	n = poll(ptbl.fds, ptbl.fdnum, 300000);
-//		fprintf(stderr, "sp_poll_loop fdnum %d result %d\n", ptbl.fdnum, n);
+	fprintf(stderr, "sp_poll_loop fdnum %d result %d\n", ptbl.fdnum, n);
 
 	if (n < 0)
 		return;
