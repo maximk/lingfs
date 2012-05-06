@@ -311,6 +311,13 @@ sp_poll_once()
 	if (ptbl.flags & TblModified)
 		sp_poll_update_table();
 
+	printf("Poll: fdnum %d\n", ptbl.fdnum);
+	for (i = 0; i < ptbl.fdnum; i++)
+		printf("%d: fd %d requested %s %s\n",
+				i, ptbl.fds[i].fd,
+			   		(ptbl.fds[i].events & POLLIN) ?"POLLIN" :"",
+			   		(ptbl.fds[i].events & POLLOUT) ?"POLLOUT" :"");
+
 	n = poll(ptbl.fds, ptbl.fdnum, 300000);
 	fprintf(stderr, "sp_poll_loop fdnum %d result %d\n", ptbl.fdnum, n);
 

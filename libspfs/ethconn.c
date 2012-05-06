@@ -230,6 +230,8 @@ sp_ethconn_write(Spconn *conn)
 		fprintf(stderr, "\n");
 	}
 
+	printf("sending...\n");
+
 	n = sendto(ethconn->fd, rc->pkt, rc->size, 0,
 			(struct sockaddr *)&ethconn->saddr, sizeof(ethconn->saddr));
 	if (srv->debuglevel > 0)
