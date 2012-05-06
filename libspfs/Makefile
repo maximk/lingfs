@@ -17,7 +17,9 @@ LIBFILES=\
 	srv.o\
 	user.o\
 	ethsrv.o\
-	ethconn.o
+	ethconn.o\
+	ethsrv2.o\
+	ethconn2.o
 
 libspfs.a: $(LIBFILES)
 	ar rc libspfs.a $(LIBFILES)

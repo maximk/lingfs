@@ -91,7 +91,7 @@ static void npfs_fiddestroy(Spfid *fid);
 void
 usage()
 {
-	fprintf(stderr, "npfs: -d -s [-x | -p port] -w nthreads\n");
+	fprintf(stderr, "npfs: -d -s [-x ifname | -p port] -w nthreads\n");
 	exit(-1);
 }
 
@@ -100,6 +100,7 @@ main(int argc, char **argv)
 {
 	int c;
 	int port, nwthreads;
+	char *ifname;
 	char *s;
 
 	int use_tcp = 0;
@@ -107,7 +108,7 @@ main(int argc, char **argv)
 
 	port = 564;
 	nwthreads = 16;
-	while ((c = getopt(argc, argv, "dsmxp:w:")) != -1) {
+	while ((c = getopt(argc, argv, "dsmx:p:w:")) != -1) {
 		switch (c) {
 		case 'd':
 			debuglevel++;
@@ -116,6 +117,7 @@ main(int argc, char **argv)
 		case 'x':
 			if (use_tcp)
 				usage();
+			ifname = optarg;
 			use_eth = 1;
 			break;
 
@@ -152,7 +154,7 @@ main(int argc, char **argv)
 
 	srv = (use_tcp)
 		?sp_socksrv_create_tcp(&port)
-		:sp_ethsrv_create();
+		:sp_ethsrv2_create(ifname);
 
 	if (!srv)
 		return -1;

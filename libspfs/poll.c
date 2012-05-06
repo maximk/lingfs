@@ -101,7 +101,7 @@ spfd_add(int fd, void (*notify)(Spfd *, void *), void *aux)
 {
 	Spfd *spfd;
 
-	fprintf(stderr, "spfd_add fd %d\n", fd);
+	//fprintf(stderr, "spfd_add fd %d\n", fd);
 	spfd = sp_malloc(sizeof(*spfd));
 	if (!spfd)
 		return NULL;
@@ -125,7 +125,7 @@ spfd_add(int fd, void (*notify)(Spfd *, void *), void *aux)
 void
 spfd_remove(Spfd *spfd)
 {
-	fprintf(stderr, "spfd_remove fd %d\n", spfd->fd);
+	//fprintf(stderr, "spfd_remove fd %d\n", spfd->fd);
 	spfd->flags |= Removed;
 	ptbl.flags |= TblModified;
 }
@@ -311,15 +311,15 @@ sp_poll_once()
 	if (ptbl.flags & TblModified)
 		sp_poll_update_table();
 
-	printf("Poll: fdnum %d\n", ptbl.fdnum);
-	for (i = 0; i < ptbl.fdnum; i++)
-		printf("%d: fd %d requested %s %s\n",
-				i, ptbl.fds[i].fd,
-			   		(ptbl.fds[i].events & POLLIN) ?"POLLIN" :"",
-			   		(ptbl.fds[i].events & POLLOUT) ?"POLLOUT" :"");
+//	printf("Poll: fdnum %d\n", ptbl.fdnum);
+//	for (i = 0; i < ptbl.fdnum; i++)
+//		printf("%d: fd %d requested %s %s\n",
+//				i, ptbl.fds[i].fd,
+//			   		(ptbl.fds[i].events & POLLIN) ?"POLLIN" :"",
+//			   		(ptbl.fds[i].events & POLLOUT) ?"POLLOUT" :"");
 
 	n = poll(ptbl.fds, ptbl.fdnum, 300000);
-	fprintf(stderr, "sp_poll_loop fdnum %d result %d\n", ptbl.fdnum, n);
+//	fprintf(stderr, "sp_poll_loop fdnum %d result %d\n", ptbl.fdnum, n);
 
 	if (n < 0)
 		return;

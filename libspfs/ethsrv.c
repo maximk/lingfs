@@ -27,8 +27,7 @@ typedef struct Ethsrv Ethsrv;
 
 struct Ethsrv {
 	int	nl_sock;	// NETLINK socket to get notified when a new Ethernet is added
-
-	int tries;
+	int try;
 
 	Spfd *spfd;
 };
@@ -39,7 +38,7 @@ static void sp_ethsrv_shutdown(Spsrv *srv);
 static void sp_ethsrv_destroy(Spsrv *srv);
 
 Spsrv*
-sp_ethsrv_create(char *intf_name)
+sp_ethsrv_create(void)
 {
 	struct Ethsrv *es = malloc(sizeof(*es));
 	if (es == NULL)
@@ -79,7 +78,7 @@ sp_ethsrv_start(Spsrv *srv)
 {
 	Ethsrv *es = srv->srvaux;
 
-	es->tries = 0;
+	es->try = 0;
 
 	es->spfd = spfd_add(es->nl_sock, sp_ethsrv_notify, srv);
 }
@@ -152,7 +151,7 @@ sp_ethsrv_notify(Spfd *spfd, void *aux)
 				rta = RTA_NEXT(rta, rta_len);
 			}
 
-			if (oper_state_ok && protinfo_ok && ++es->tries == 2)
+			if (oper_state_ok && protinfo_ok && ++es->try == 2)
 			{
 				if (srv->debuglevel > 0)
 					fprintf(stderr, "sp_ethsrv_notify: RTM_NEW_LINK msg recv [%d]\n", ifi->ifi_index);
@@ -181,7 +180,7 @@ sp_ethsrv_notify(Spfd *spfd, void *aux)
 				if (srv->debuglevel > 0)
 					fprintf(stderr, "sp_ethsrv_notify: ethconn added: fd %d idx %d\n", fd, ifi->ifi_index);
 
-				es->tries = 0;
+				es->try = 0;
 			}
 		}
 		hdr = NLMSG_NEXT(hdr, len);

@@ -458,6 +458,7 @@ Spfcall *sp_conn_new_incall(Spconn *conn);
 void sp_conn_free_incall(Spconn* conn, Spfcall *rc);
 Spconn *sp_fdconn_create(Spsrv *srv, int fdin, int fdout);
 Spconn *sp_ethconn_create(Spsrv *srv, int fd);
+Spconn *sp_ethconn2_create(Spsrv *srv, void *saddr);
 
 Spfid **sp_fidpool_create(void);
 void sp_fidpool_destroy(Spfid **);
@@ -515,7 +516,8 @@ int sp_usergroups(Spuser *u, gid_t **gids);
 int sp_change_user(Spuser *u);
 
 Spsrv *sp_socksrv_create_tcp(int*);
-Spsrv *sp_ethsrv_create();
+Spsrv *sp_ethsrv_create(void);
+Spsrv *sp_ethsrv2_create(char *);
 Spsrv *sp_pipesrv_create();
 int sp_pipesrv_mount(Spsrv *srv, char *mntpt, char *user, int mntflags, char *opts);
 
