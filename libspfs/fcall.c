@@ -156,10 +156,11 @@ sp_attach(Spreq *req, Spfcall *tc)
 			goto done;
 		}
 
-		if (!(afid->type&Qtauth)) {
-			sp_werror(Ebadusefid, EINVAL);
-			goto done;
-		}
+		// MK: afid == 0
+		//if (!(afid->type&Qtauth)) {
+		//	sp_werror(Ebadusefid, EINVAL);
+		//	goto done;
+		//}
 	} else 
 		sp_fid_incref(afid);
 
@@ -254,10 +255,12 @@ sp_walk(Spreq *req, Spfcall *tc)
 		sp_fid_incref(fid);
 
 	req->fid = fid;
-	if (!(fid->type&Qtdir)) {
-		sp_werror(Enotdir, ENOTDIR);
-		goto done;
-	}
+
+	//MK: fid->type not updated by 'attach'
+	//if (!(fid->type&Qtdir)) {
+	//	sp_werror(Enotdir, ENOTDIR);
+	//	goto done;
+	//}
 
 	if (fid->omode != (u16) ~0) {
 		sp_werror(Ebadusefid, EIO);

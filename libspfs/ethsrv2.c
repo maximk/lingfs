@@ -141,7 +141,10 @@ sp_ethsrv2_notify(Spfd *spfd, void *aux)
 		return;
 	int exp_len = buf[0] | (buf[1] << 8) | (buf[2] << 16) | (buf[3] << 24);
 	if (exp_len != len -4)	// -4: csum field
+	{
+		fprintf(stderr, "sp_ethsrv2_notify: bad exp len %d vs %d\n", exp_len, len -4);
 		return;
+	}
 
 	uint8_t mac1 = saddr.sll_addr[0];
 	uint8_t mac2 = saddr.sll_addr[1];
